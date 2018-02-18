@@ -38,14 +38,12 @@ class Helper {
     static writeSSHConfig(hosts) {
         let content = '';
         hosts.forEach((host) => {
-            content += `Host ${host.name}
-   hostname ${host.hostname}
-   user ${host.user}
-   port ${host.port}`;
-            if (host.identityfile) {
-                content += "\n" + '   identityfile ' + host.identityfile;
-            }
-            content += "\n";
+            content += `Host ${host.name}\n`;
+            Object.keys(host).forEach((key) => {
+                if (key !== 'name' && host[key]) {
+                    content += `    ${key} ${host[key]}\n`;
+                }
+            });
         });
         fs.writeFileSync(Helper.getPathToConfig(), content, { mode: 600 });
     }

@@ -46,15 +46,13 @@ export default class Helper {
         let content = '';
 
         hosts.forEach((host) => {
-            content += `Host ${host.name}
-   hostname ${host.hostname}
-   user ${host.user}
-   port ${host.port}`;
+            content += `Host ${host.name}\n`;
 
-            if (host.identityfile) {
-                content += "\n" + '   identityfile ' + host.identityfile;
-            }
-            content += "\n";
+            Object.keys(host).forEach((key : string) => {
+                if (key !== 'name' && host[key]) {
+                    content += `    ${key} ${host[key]}\n`;
+                }
+            });
         });
 
         fs.writeFileSync(Helper.getPathToConfig(), content, {mode: 600});
