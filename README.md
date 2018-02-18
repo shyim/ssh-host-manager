@@ -20,8 +20,21 @@ npm install -g ssh-host-manager
 // Add a new entry with name test
 shm add test root@example.com
 
+// Add a new entry with name test with custom port
+shm add test root@example.com:443
+
+// Add a new entry with name test with custom ssh key
+shm add test root@example.com /home/shyim/.ssh/server.key
+
 // Connect to the new entry
 ssh test
 ```
 
-![List](https://ipfs.io/ipfs/QmSq1o3nvBkaCcvgvhvZCS4upnBjvsD9uG6v9MeVAnQhmn)
+![List](https://ipfs.io/ipfs/QmWDyiBECcKC2A8EADkK1N7bCKNmoY9ovi6d6cN6z2VbLa)
+
+## Uninstall
+
+* Remove the file
+``$PATH/.ssh/manager_hosts``
+
+* Remove the include in ``$PATH/.ssh/config``
