@@ -35,6 +35,6 @@ ssh test
 ## Uninstall
 
 * Remove the file
-``$PATH/.ssh/manager_hosts``
+``$HOME/.ssh/manager_hosts``
 
-* Remove the include in ``$PATH/.ssh/config``
+* Remove the include in ``$HOME/.ssh/config``
