@@ -49,7 +49,12 @@ export default class Helper {
             content += `Host ${host.name}
    hostname ${host.hostname}
    user ${host.user}
-   port ${host.port}\n`
+   port ${host.port}`;
+
+            if (host.identityfile) {
+                content += "\n" + '   identityfile ' + host.identityfile;
+            }
+            content += "\n";
         });
 
         fs.writeFileSync(Helper.getPathToConfig(), content, {mode: 600});

@@ -22,7 +22,8 @@ class AddShortcut {
             name: argv.name,
             hostname: uriProperties.resource,
             user: uriProperties.user || process.env['USER'],
-            port: uriProperties.port
+            port: uriProperties.port,
+            identityfile: argv.identifyfile || null
         });
         let currentConfig = helper_1.default.parseSSHConfig();
         currentConfig.forEach((host) => {

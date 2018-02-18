@@ -9,4 +9,5 @@ export default class Host {
     public hostname : string;
     public port : number;
     public user : string;
+    public identityfile: string;
 }

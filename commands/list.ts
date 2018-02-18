@@ -10,12 +10,12 @@ export default class List {
         console.log(chalk.green('Entries:'));
 
         let table = new CliTable2({
-            head: ['Name', 'Host', 'Port', 'User'],
+            head: ['Name', 'Host', 'Port', 'User', 'Identity File'],
             colWidths: [20, 20]
         });
 
         config.forEach((row) => {
-            table.push([row.name, row.hostname, row.port.toString(), row.user]);
+            table.push([row.name, row.hostname, row.port.toString(), row.user, row.identityfile]);
         });
 
         console.log(table.toString());

@@ -8,7 +8,7 @@ let yargs = require('yargs');
 yargs.version('0.0.1')
     .usage('$0 <cmd> [args]')
     .command('list', 'List all entries', () => { }, list_1.default.execute)
-    .command('add <name> <uri>', 'Add a new entry', (yargs) => {
+    .command('add <name> <uri> [identify file]', 'Add a new entry', (yargs) => {
     yargs.positional('name', {
         type: 'string',
         default: null,
