@@ -1,6 +1,6 @@
 {
   "name": "ssh-host-manager",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple CLI to manage your ssh shortcuts",
   "main": "index.js",
   "scripts": {
