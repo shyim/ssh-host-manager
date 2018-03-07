@@ -1,5 +1,7 @@
 # SSH Host Manager
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/shyim/ssh-host-manager.svg)](https://greenkeeper.io/)
+
 Simple CLI to manage your ssh shortcuts
 
 ## Install
