@@ -1,6 +1,6 @@
 import Helper from "../helper";
 import chalk from "chalk";
-import * as CliTable2 from "cli-table2";
+import * as CliTable from "cli-table3";
 import Host from "../struct/Host";
 
 export default class List {
@@ -9,7 +9,7 @@ export default class List {
 
         console.log(chalk.green('Entries:'));
 
-        let table = new CliTable2({
+        let table = new CliTable({
             head: ['Name', 'Host', 'Port', 'User', 'Identity File'],
             colWidths: [20, 20]
         });
