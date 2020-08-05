@@ -25,39 +25,39 @@ var qs = []*survey.Question{
 		Validate: survey.Required,
 	},
 	{
-		Name: "Port",
+		Name:   "Port",
 		Prompt: &survey.Input{Message: "Port? (22)"},
 	},
 	{
-		Name: "User",
-		Prompt:   &survey.Input{Message: "User? (Current)"},
+		Name:   "User",
+		Prompt: &survey.Input{Message: "User? (Current)"},
 	},
 	{
-		Name: "IdentityFile",
-		Prompt:   &survey.Input{Message: "IdentityFile?"},
+		Name:   "IdentityFile",
+		Prompt: &survey.Input{Message: "IdentityFile?"},
 	},
 	{
 		Name: "ForwardAgent",
-		Prompt:   &survey.Confirm{
+		Prompt: &survey.Confirm{
 			Message: "ForwardAgent?",
 		},
 	},
 	{
-		Name: "Jump",
-		Prompt:   &survey.Input{Message: "Jump-Over?"},
+		Name:   "Jump",
+		Prompt: &survey.Input{Message: "Jump-Over?"},
 	},
 }
 
-func AddCommand(c *cli.Context) error  {
+func AddCommand(c *cli.Context) error {
 	answers := struct {
-		Group string
-		Name string
-		Host string
-		Port string
-		User string
+		Group        string
+		Name         string
+		Host         string
+		Port         string
+		User         string
 		IdentityFile string
 		ForwardAgent bool
-		Jump string
+		Jump         string
 	}{}
 
 	err := survey.Ask(qs, &answers)
@@ -78,7 +78,6 @@ func AddCommand(c *cli.Context) error  {
 
 	if group == nil {
 		group = &config.Group{Name: answers.Group}
-		groups = append(groups, group)
 	}
 
 	port, err := strconv.ParseInt(answers.Port, 10, 64)
@@ -88,9 +87,9 @@ func AddCommand(c *cli.Context) error  {
 	}
 
 	newConfig := config.Config{
-		Name: answers.Name,
-		Host: answers.Host,
-		Port: port,
+		Name:         answers.Name,
+		Host:         answers.Host,
+		Port:         port,
 		ForwardAgent: convertForwardAgent(answers.ForwardAgent),
 	}
 
@@ -108,7 +107,7 @@ func AddCommand(c *cli.Context) error  {
 
 	group.Configs = append(group.Configs, newConfig)
 
-	config.UpdateConfig(groups)
+	config.UpdateConfig(group)
 
 	return nil
 }

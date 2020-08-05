@@ -1,6 +1,7 @@
 package config
 
 import (
+	"io/ioutil"
 	"os"
 	"os/user"
 )
@@ -13,13 +14,31 @@ func getSshConfigPath() string {
 
 func GetConfigPath() string {
 	homeDir, _ := os.UserHomeDir()
+	configFolder := homeDir + "/.ssh/groups/"
 
-	return homeDir + "/.ssh/manager_hosts"
+	return configFolder
+}
+
+func GetConfigFiles() []string {
+	configFolder := GetConfigPath()
+
+	list, err := ioutil.ReadDir(configFolder)
+	var files []string
+
+	if err != nil {
+		return files
+	}
+
+	for _, file := range list {
+		files = append(files, configFolder+file.Name())
+	}
+
+	return files
 }
 
 type Group struct {
-	Name 		string
-	Configs     []Config
+	Name    string
+	Configs []Config
 }
 
 type Config struct {
@@ -32,11 +51,11 @@ type Config struct {
 	ForwardAgent string
 }
 
-
 func NewConfig() Config {
 	u, _ := user.Current()
 
 	return Config{
-		User:         u.Username,
+		User: u.Username,
+		Port: 22,
 	}
 }

@@ -2,6 +2,7 @@ package config
 
 import (
 	"io/ioutil"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -11,49 +12,41 @@ type GroupCollection []*Group
 
 var re = regexp.MustCompile(`(?m)\s*(?P<key>\w+)\s*(?P<value>\w.*)$`)
 
-func GetConfig() (groups GroupCollection)  {
-	data, err := ioutil.ReadFile(GetConfigPath())
+func GetConfig() (groups GroupCollection) {
+	files := GetConfigFiles()
 
-	if err != nil {
+	if files == nil {
 		return groups
 	}
 
-	lines := strings.Split(string(data), "\n")
-	var currentConfig = Config{}
-	var currentGroup *Group
+	for _, file := range files {
+		data, err := ioutil.ReadFile(file)
 
-	for _, line := range lines {
-		if len(line) == 0 {
+		currentGroup := &Group{Name: path.Base(file)}
+		groups = append(groups, currentGroup)
+
+		if err != nil {
 			continue
 		}
 
-		key, value := getLineInformation(line)
+		lines := strings.Split(string(data), "\n")
+		var currentConfig = Config{}
 
-		if key == "Group" {
-			if currentGroup != nil && len(currentConfig.Name) > 0 {
-				currentGroup.Configs = append(currentGroup.Configs, currentConfig)
+		for _, line := range lines {
+			if len(line) == 0 {
+				continue
 			}
 
-			currentGroup = nil
-			currentConfig = NewConfig()
-			for _, group := range groups {
-				if group.Name == value {
-					currentGroup = group
-					break
+			key, value := getLineInformation(line)
+
+			if key == "Host" {
+				if len(currentConfig.Name) > 0 {
+					currentGroup.Configs = append(currentGroup.Configs, currentConfig)
 				}
+				currentConfig = NewConfig()
 			}
 
-			if currentGroup == nil {
-				currentGroup = &Group{Name: value}
-				groups = append(groups, currentGroup)
-			}
-		}
-
-		if key == "Host" {
-			currentConfig = NewConfig()
-		}
-
-		switch key {
+			switch key {
 			case "Host":
 				currentConfig.Name = value
 				break
@@ -75,17 +68,18 @@ func GetConfig() (groups GroupCollection)  {
 			case "Forwardagent":
 				currentConfig.ForwardAgent = value
 				break
+			}
 		}
-	}
 
-	if currentGroup != nil && len(currentConfig.Name) > 0 {
-		currentGroup.Configs = append(currentGroup.Configs, currentConfig)
+		if len(currentConfig.Name) > 0 {
+			currentGroup.Configs = append(currentGroup.Configs, currentConfig)
+		}
 	}
 
 	return groups
 }
 
-func getLineInformation(line string) (string, string)  {
+func getLineInformation(line string) (string, string) {
 	match := re.FindStringSubmatch(line)
 	result := make(map[string]string)
 	for i, name := range re.SubexpNames() {

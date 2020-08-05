@@ -3,12 +3,12 @@ package cmd
 import (
 	"fmt"
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/urfave/cli/v2"
 	"github.com/shyim/ssh-host-manager/config"
+	"github.com/urfave/cli/v2"
 	"strconv"
 )
 
-func EditCommand(c *cli.Context) error  {
+func EditCommand(c *cli.Context) error {
 	choosenText := ""
 	prompt := &survey.Select{
 		Message: "Choose to edit",
@@ -47,39 +47,39 @@ func EditCommand(c *cli.Context) error  {
 			Validate: survey.Required,
 		},
 		{
-			Name: "Port",
+			Name:   "Port",
 			Prompt: &survey.Input{Message: "Port? (22)", Default: strconv.FormatInt(chooseConfig.Port, 10)},
 		},
 		{
-			Name: "User",
-			Prompt:   &survey.Input{Message: "User? (Current)", Default: chooseConfig.User},
+			Name:   "User",
+			Prompt: &survey.Input{Message: "User? (Current)", Default: chooseConfig.User},
 		},
 		{
-			Name: "IdentityFile",
-			Prompt:   &survey.Input{Message: "IdentityFile?", Default: chooseConfig.IdentityFile},
+			Name:   "IdentityFile",
+			Prompt: &survey.Input{Message: "IdentityFile?", Default: chooseConfig.IdentityFile},
 		},
 		{
 			Name: "ForwardAgent",
-			Prompt:   &survey.Confirm{
+			Prompt: &survey.Confirm{
 				Message: "ForwardAgent?",
 				Default: chooseConfig.ForwardAgent == "yes",
 			},
 		},
 		{
-			Name: "Jump",
-			Prompt:   &survey.Input{Message: "Jump-Over?"},
+			Name:   "Jump",
+			Prompt: &survey.Input{Message: "Jump-Over?"},
 		},
 	}
 
 	answers := struct {
-		Group string
-		Name string
-		Host string
-		Port string
-		User string
+		Group        string
+		Name         string
+		Host         string
+		Port         string
+		User         string
 		IdentityFile string
 		ForwardAgent bool
-		Jump string
+		Jump         string
 	}{}
 
 	err := survey.Ask(qsEdit, &answers)
@@ -103,7 +103,7 @@ func EditCommand(c *cli.Context) error  {
 
 	groups[gIndex].Configs[cIndex] = *chooseConfig
 
-	config.UpdateConfig(groups)
+	config.UpdateConfig(groups[gIndex])
 
 	return nil
 }

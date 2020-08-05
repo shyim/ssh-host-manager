@@ -7,10 +7,10 @@ import (
 	"strings"
 )
 
-func UpdateConfig(groups []*Group)  {
-	config := generateConfig(groups)
+func UpdateConfig(group *Group) {
+	config := generateConfig(group)
 
-	_ = ioutil.WriteFile(GetConfigPath(), []byte(config), 0600)
+	_ = ioutil.WriteFile(GetConfigPath()+group.Name, []byte(config), 0600)
 
 	addIncludeIfNeeded()
 }
@@ -19,7 +19,7 @@ func addIncludeIfNeeded() {
 	configPath := getSshConfigPath()
 
 	if !fileExists(configPath) {
-		_ = ioutil.WriteFile(configPath, []byte("Include manager_hosts"), 0600)
+		_ = ioutil.WriteFile(configPath, []byte("Include groups/*"), 0600)
 		return
 	}
 
@@ -30,43 +30,39 @@ func addIncludeIfNeeded() {
 		return
 	}
 
-	if strings.Contains(config, "Include manager_hosts") {
+	if strings.Contains(config, "Include groups/*") {
 		return
 	}
 
-	config += "\nInclude manager_hosts"
+	config += "\nInclude groups/*"
 
 	_ = ioutil.WriteFile(configPath, []byte(config), 0600)
 }
 
-func generateConfig(groups []*Group) string {
+func generateConfig(group *Group) string {
 	config := ""
 
-	for _, group := range groups {
-		for _, c := range group.Configs {
-			config += "#group " + group.Name + "\n"
+	for _, c := range group.Configs {
+		config += "Host " + c.Name + "\n"
+		config += "  Hostname " + c.Host + "\n"
+		config += "  Port " + strconv.FormatInt(c.Port, 10) + "\n"
 
-			config += "Host " + c.Name + "\n"
-			config += "  Hostname " + c.Host + "\n"
-			config += "  Port " + strconv.FormatInt(c.Port, 10) + "\n"
-
-			if len(c.User) > 0 {
-				config += "  User " + c.User + "\n"
-			}
-
-			if len(c.IdentityFile) > 0 {
-				config += "  IdentityFile " + c.IdentityFile + "\n"
-			}
-
-			if len(c.ProxyCommand) > 0 {
-				config += "  ProxyCommand " + c.ProxyCommand + "\n"
-			}
-
-			if len(c.ForwardAgent) > 0 {
-				config += "  ForwardAgent " + c.ForwardAgent + "\n"
-			}
-			config += "\n"
+		if len(c.User) > 0 {
+			config += "  User " + c.User + "\n"
 		}
+
+		if len(c.IdentityFile) > 0 {
+			config += "  IdentityFile " + c.IdentityFile + "\n"
+		}
+
+		if len(c.ProxyCommand) > 0 {
+			config += "  ProxyCommand " + c.ProxyCommand + "\n"
+		}
+
+		if len(c.ForwardAgent) > 0 {
+			config += "  ForwardAgent " + c.ForwardAgent + "\n"
+		}
+		config += "\n"
 	}
 
 	return config
